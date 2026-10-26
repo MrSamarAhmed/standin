@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StandIn — App Map</title>
+<style>
+  :root {
+    color-scheme: light;
+    --paper: #f6f1e8;
+    --surface: #fffcf6;
+    --ink: #1d1a16;
+    --muted: #6b6358;
+    --rule: #ded3c2;
+    --vermilion: #b83a24;
+    --sage: #2f6b5e;
+    --token: #e7efea;
+    --amber: #f2d98d;
+    --mono: "SFMono-Regular", "SF Mono", "IBM Plex Mono", Menlo, Consolas, monospace;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --sans: "Avenir Next", Avenir, "Segoe UI", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(circle at 15% 0%, rgba(196, 68, 46, 0.06), transparent 34rem),
+      var(--paper);
+    color: var(--ink);
+    font: 16px/1.6 var(--sans);
+  }
+  a { color: var(--vermilion); text-underline-offset: 0.18em; }
+  a:focus-visible, summary:focus-visible {
+    outline: 3px solid var(--vermilion);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+  .skip {
+    position: absolute;
+    left: 1rem;
+    top: -5rem;
+    z-index: 10;
+    padding: 0.7rem 1rem;
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .skip:focus { top: 1rem; }
+  .wrap { width: min(1040px, calc(100% - 2rem)); margin: 0 auto; }
+  header.masthead {
+    border-bottom: 1px solid var(--rule);
+    padding: 2.6rem 0 1.8rem;
+  }
+  .eyebrow {
+    margin: 0 0 0.6rem;
+    color: var(--vermilion);
+    font: 600 0.72rem/1.2 var(--mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 600; line-height: 1.15; }
+  h1 { margin: 0; font-size: clamp(2.2rem, 6vw, 3.7rem); letter-spacing: -0.02em; }
+  h1 em { color: var(--vermilion); font-style: italic; }
+  .lede { max-width: 65ch; margin: 1rem 0 0; color: var(--muted); font-size: 1.05rem; }
+  .meta {
+    margin: 1.4rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.4rem;
+    color: var(--muted);
+    font: 0.78rem/1.4 var(--mono);
+  }
+  main { padding: 2.2rem 0 3rem; }
+  section { margin: 0 0 2.6rem; }
+  h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+    margin: 0 0 1rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid var(--rule);
+    font-size: clamp(1.45rem, 3vw, 1.9rem);
+  }
+  h2 .num {
+    color: var(--vermilion);
+    font: 500 0.78rem/1 var(--mono);
+    letter-spacing: 0.06em;
+  }
+  p { margin: 0 0 0.9rem; }
+  .cols { display: grid; gap: 1.2rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+  .card {
+    padding: 1.1rem 1.2rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    box-shadow: 0 2px 0 rgba(29, 26, 22, 0.04);
+  }
+  .card h3 { margin: 0 0 0.4rem; font-size: 1.05rem; }
+  .card p:last-child { margin-bottom: 0; }
+  .pieces { display: grid; gap: 0.8rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+  .piece { padding-top: 0.65rem; border-top: 2px solid var(--rule); }
+  .piece strong { display: block; font-size: 0.95rem; }
+  .piece span { color: var(--muted); font-size: 0.88rem; }
+  code, .path {
+    font-family: var(--mono);
+    font-size: 0.84em;
+    background: rgba(29, 26, 22, 0.055);
+    padding: 0.08em 0.32em;
+    border-radius: 3px;
+    overflow-wrap: anywhere;
+  }
+  .path { white-space: nowrap; }
+  .flow {
+    display: grid;
+    gap: 0.65rem;
+    padding: 1.1rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+  }
+  .flow-step {
+    display: grid;
+    gap: 0.15rem 0.9rem;
+    grid-template-columns: 2.1rem 1fr;
+    align-items: start;
+    padding: 0.7rem 0.8rem;
+    background: #fbf6ec;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+  }
+  .flow-step .step-no {
+    display: grid;
+    place-items: center;
+    width: 1.65rem;
+    height: 1.65rem;
+    border: 1px solid var(--ink);
+    border-radius: 50%;
+    font: 600 0.75rem/1 var(--mono);
+  }
+  .flow-step strong { font-family: var(--serif); font-size: 1.02rem; }
+  .flow-step small { display: block; color: var(--muted); font-size: 0.82rem; }
+  .flow-arrow {
+    justify-self: center;
+    color: var(--vermilion);
+    font: 600 1rem/1 var(--mono);
+  }
+  .external {
+    margin-top: 0.65rem;
+    padding: 0.85rem 1rem;
+    border: 1px dashed var(--muted);
+    border-radius: 3px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .external strong { color: var(--ink); }
+  .stops { display: grid; gap: 1rem; }
+  .stop {
+    padding: 1.1rem 1.2rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--vermilion);
+    border-radius: 3px;
+  }
+  .stop h3 { margin: 0 0 0.3rem; font-size: 1.12rem; }
+  .stop p { margin-bottom: 0.6rem; }
+  .stop p:last-child { margin-bottom: 0; }
+  .stop ul { margin: 0.4rem 0 0; padding-left: 1.15rem; }
+  .stop li { margin: 0.2rem 0; }
+  .result {
+    margin-top: 0.7rem;
+    padding: 0.65rem 0.8rem;
+    background: var(--token);
+    border-radius: 3px;
+    font-size: 0.9rem;
+  }
+  .result strong { font-weight: 600; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+  caption { caption-side: bottom; padding-top: 0.6rem; color: var(--muted); font-size: 0.82rem; text-align: left; }
+  th, td { padding: 0.65rem 0.7rem; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+  th { font: 600 0.74rem/1.3 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  td:first-child { font-weight: 600; }
+  .practice {
+    padding: 1.25rem 1.35rem;
+    background: #fbf6ec;
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--sage);
+    border-radius: 3px;
+  }
+  .practice h3 { margin: 0 0 0.45rem; font-size: 1.15rem; }
+  .practice ol { margin: 0.5rem 0 0; padding-left: 1.25rem; }
+  .practice li { margin: 0.4rem 0; }
+  .note { color: var(--muted); font-size: 0.9rem; }
+  details {
+    margin-top: 0.8rem;
+    padding: 0.75rem 0.9rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+  }
+  summary { cursor: pointer; font-weight: 600; }
+  details p:last-child, details ul:last-child { margin-bottom: 0; }
+  footer {
+    padding: 1.4rem 0 2.4rem;
+    border-top: 1px solid var(--rule);
+    color: var(--muted);
+    font-size: 0.84rem;
+  }
+  footer p { margin: 0.25rem 0; }
+  @media (max-width: 620px) {
+    .wrap { width: calc(100% - 1.4rem); }
+    header.masthead { padding-top: 1.8rem; }
+    .flow-step { grid-template-columns: 1.9rem 1fr; }
+    th, td { padding: 0.55rem 0.45rem; }
+    .path { white-space: normal; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+  @media print {
+    body { background: #fff; }
+    .skip { display: none; }
+    section { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="wrap">
+    <p class="eyebrow">StandIn / proof-of-concept map</p>
+    <h1>One document, one <em>cast</em>, one reversible loop.</h1>
+    <p class="lede">A plain-language map of the finished app: what it does, where a real action lives in the code, and where to start when you want to change it.</p>
+    <p class="meta">
+      <span>Generated 2026-10-26</span>
+      <span>From the working tree</span>
+      <span>No source commit recorded yet</span>
+    </p>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+
+  <section aria-labelledby="overview-title">
+    <h2 id="overview-title"><span class="num">01</span> What the app is</h2>
+    <p>StandIn is a local-first privacy desk for using AI on confidential documents. It finds likely people, organizations, locations, emails, phone numbers, and identifiers in a document; gives each accepted entity a stable token; produces a tokenized safe copy; checks that copy for known leaks; and restores the real details in the AI's answer.</p>
+    <p>The proof of concept is one browser tab with no account, backend, database, or API key. The document and cast live in React memory for the session only. The bundled language model runs in a Web Worker on the same machine; the app fetches its static files from its own origin and does not send document text to a server. The user's AI assistant is a separate tool that the user controls by copying text into it.</p>
+
+    <div class="pieces" aria-label="Main pieces">
+      <div class="piece"><strong>The desk</strong><span>Three steps: prepare and review, safe copy, restore.</span></div>
+      <div class="piece"><strong>Detection</strong><span>Pattern rules plus a local DistilBERT NER model.</span></div>
+      <div class="piece"><strong>The cast</strong><span>Grouped mentions with stable tokens and a human review.</span></div>
+      <div class="piece"><strong>The loop</strong><span>Tokenize, leak-check, copy, restore the answer.</span></div>
+      <div class="piece"><strong>The boundary</strong><span>No persistence. A refresh loses the work by design.</span></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="flow-title">
+    <h2 id="flow-title"><span class="num">02</span> One action through the system</h2>
+    <div class="flow" role="group" aria-label="The core scan-to-restore flow">
+      <div class="flow-step">
+        <span class="step-no">1</span>
+        <div>
+          <strong>Load a document and choose “Scan locally.”</strong>
+          <small><span class="path">src/components/DocumentEditor.tsx</span> collects the text; <span class="path">src/components/PreparePanel.tsx</span> passes <code>onScan={standIn.scan}</code>.</small>
+        </div>
+      </div>
+      <div class="flow-arrow" aria-hidden="true">↓</div>
+      <div class="flow-step">
+        <span class="step-no">2</span>
+        <div>
+          <strong>The hook scans patterns and sends chunks to the local model.</strong>
+          <small><span class="path">src/hooks/useStandIn.ts</span> calls <code>findPatternDetections</code>, then the Worker through <span class="path">src/hooks/useWorkerScanner.ts</span>. <span class="path">src/lib/ner.worker.ts</span> loads the bundled ONNX model.</small>
+        </div>
+      </div>
+      <div class="flow-arrow" aria-hidden="true">↓</div>
+      <div class="flow-step">
+        <span class="step-no">3</span>
+        <div>
+          <strong>Detections become a reviewable cast.</strong>
+          <small><span class="path">src/lib/detections.ts</span> merges pattern and model results; <span class="path">src/lib/cast.ts</span> groups mentions and assigns tokens.</small>
+        </div>
+      </div>
+      <div class="flow-arrow" aria-hidden="true">↓</div>
+      <div class="flow-step">
+        <span class="step-no">4</span>
+        <div>
+          <strong>The safe copy and restore use the same cast.</strong>
+          <small><span class="path">src/lib/tokenize.ts</span> writes the tokens; <span class="path">src/lib/leakCheck.ts</span> checks the result; <span class="path">src/lib/restore.ts</span> reverses known tokens in the AI's answer.</small>
+        </div>
+      </div>
+      <div class="external"><strong>Outside the app:</strong> the user pastes the safe copy into their own AI tool. That tool's privacy terms apply. StandIn never calls it.</div>
+    </div>
+  </section>
+
+  <section aria-labelledby="route-title">
+    <h2 id="route-title"><span class="num">03</span> Reference route</h2>
+    <p class="note">This is a route through the finished source, not a record of a completed walkthrough. Search for the quoted labels and symbols in the repository.</p>
+    <div class="stops">
+      <article class="stop">
+        <h3>Stop 1 — Follow the scan button</h3>
+        <p>Start where the user starts. The editor owns the text and the primary action; the panel wires that action to the single state hook.</p>
+        <ul>
+          <li><span class="path">src/components/DocumentEditor.tsx</span> — search <code>Scan locally</code> and <code>onScan</code>.</li>
+          <li><span class="path">src/components/PreparePanel.tsx</span> — search <code>onScan={standIn.scan}</code>.</li>
+          <li><span class="path">src/hooks/useStandIn.ts</span> — search <code>const scan = useCallback</code>.</li>
+        </ul>
+        <div class="result"><strong>Visible result:</strong> after a scan, the review screen shows the highlighted document and a cast panel. The supplied sample produces 19 stand-ins in the finished build.</div>
+      </article>
+
+      <article class="stop">
+        <h3>Stop 2 — See how detections become a cast</h3>
+        <p>The hook deliberately runs patterns first, then the model. Pattern results win overlaps; the model adds people, organizations, and locations. The cast is the human-reviewable layer between raw detections and tokens.</p>
+        <ul>
+          <li><span class="path">src/lib/patterns.ts</span> — search <code>findPatternDetections</code>; the rules are in <code>const RULES</code>.</li>
+          <li><span class="path">src/lib/ner.worker.ts</span> — search <code>pipeline(</code> and <code>localModelPath</code>.</li>
+          <li><span class="path">src/lib/detections.ts</span> — search <code>mergeDetections</code>.</li>
+          <li><span class="path">src/lib/cast.ts</span> — search <code>buildCast</code> and <code>absorbPartialNameMentions</code>.</li>
+        </ul>
+        <div class="result"><strong>Visible result:</strong> each cast row shows a type, a token, a source label, and its detected mentions. A click accepts or rejects the entry; exact repeats are replaced in the safe copy even when a repeat was not highlighted.</div>
+      </article>
+
+      <article class="stop">
+        <h3>Stop 3 — Follow the safe copy and the restore</h3>
+        <p>Both directions read the same cast snapshot. That shared snapshot is what makes the loop reversible: the safe copy is not just redaction, and restore is not a second guess at who was who.</p>
+        <ul>
+          <li><span class="path">src/hooks/useStandIn.ts</span> — search <code>const createSafeCopy</code> and <code>const restore</code>.</li>
+          <li><span class="path">src/lib/tokenize.ts</span> — search <code>tokenizeDocument</code>.</li>
+          <li><span class="path">src/lib/leakCheck.ts</span> — search <code>checkLeaks</code>.</li>
+          <li><span class="path">src/lib/restore.ts</span> — search <code>restoreTokens</code> and <code>LOOSE_TOKEN</code>.</li>
+          <li><span class="path">src/components/SafeCopyView.tsx</span> and <span class="path">src/components/RestoreView.tsx</span> — the two result surfaces.</li>
+        </ul>
+        <div class="result"><strong>Visible result:</strong> the sample safe copy is 1,068 characters with 19 stand-ins and 29 token mentions; the known-residual check returns none. A pasted answer using the tokens restores the real names, email, and money; an invented token such as <code>[PERSON_9]</code> stays visible and is reported.</div>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="change-title">
+    <h2 id="change-title"><span class="num">04</span> To change this, start here</h2>
+    <div class="table-wrap">
+      <table>
+        <caption>Search these files for the named symbols. Paths are relative to the repository root.</caption>
+        <thead>
+          <tr><th scope="col">If you want to change…</th><th scope="col">Start at</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Which patterns count as sensitive</td><td><span class="path">src/lib/patterns.ts</span> — <code>const RULES</code>, then run <span class="path">src/lib/patterns.test.ts</span>.</td></tr>
+          <tr><td>The local model or its labels</td><td><span class="path">src/lib/ner.worker.ts</span> — <code>pipeline(</code>; model files are under <span class="path">public/models/</span>. Re-run <code>npm run verify:model</code>.</td></tr>
+          <tr><td>How mentions group into a cast row</td><td><span class="path">src/lib/cast.ts</span> — <code>buildCast</code> and <code>absorbPartialNameMentions</code>.</td></tr>
+          <tr><td>What the safe copy replaces</td><td><span class="path">src/lib/tokenize.ts</span> — <code>tokenizeDocument</code>.</td></tr>
+          <tr><td>What counts as a leak</td><td><span class="path">src/lib/leakCheck.ts</span> — <code>checkLeaks</code>.</td></tr>
+          <tr><td>How AI tokens are restored</td><td><span class="path">src/lib/restore.ts</span> — <code>restoreTokens</code> and the <code>LOOSE_TOKEN</code> matcher.</td></tr>
+          <tr><td>The built-in demo document</td><td><span class="path">src/lib/sample.ts</span> — <code>SAMPLE_TEXT</code>. Then re-run the browser journey and update the screenshots.</td></tr>
+          <tr><td>The visual system</td><td><span class="path">src/styles.css</span> — start at <code>:root</code>. The reviewed desktop and mobile screenshots live in <span class="path">docs/screenshots/</span>.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section aria-labelledby="practice-title">
+    <h2 id="practice-title"><span class="num">05</span> A practice to reuse</h2>
+    <div class="practice">
+      <h3>Turn each visible promise into a check you can run.</h3>
+      <p>The safe copy makes a concrete promise: no known sensitive values remain. During the final browser check, the visible result was compared against the sample's actual names, emails, account, card, URL, and reference code. That check found a bare reference code still present in the safe copy. The fix was not to hand-edit the output: a standalone uppercase-code rule was added to <code>const RULES</code>, and a regression test named <code>finds standalone uppercase reference codes</code> was added to <span class="path">src/lib/patterns.test.ts</span>. The full journey test in <span class="path">src/App.test.tsx</span> and the leak-check tests in <span class="path">src/lib/leakCheck.test.ts</span> protect the broader promise.</p>
+      <ol>
+        <li>Name the user-visible condition, not just the implementation (“the safe copy contains none of the known sensitive values”).</li>
+        <li>Make the condition observable in a test, smoke script, or browser check before you trust the feature.</li>
+        <li>When a manual check finds a miss, encode that exact miss as a regression test, then fix the shared rule — not the one document that exposed it.</li>
+        <li>State the edge of the check: this is a known-residual check, not a guarantee of anonymity. The same honesty belongs in any future privacy feature.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section aria-labelledby="run-title">
+    <h2 id="run-title"><span class="num">06</span> Run it again</h2>
+    <div class="cols">
+      <div class="card">
+        <h3>Local app</h3>
+        <p><code>npm install</code><br><code>npm run dev</code></p>
+        <p>Open the printed URL and choose <strong>Load sample memo</strong>. Node.js 20 or newer is required.</p>
+      </div>
+      <div class="card">
+        <h3>Checks</h3>
+        <p><code>npm test</code><br><code>npm run typecheck</code><br><code>npm run build</code><br><code>npm run verify:model</code></p>
+        <p>The model smoke test loads the real bundled model; it is not a mock.</p>
+      </div>
+      <div class="card">
+        <h3>Snapshot note</h3>
+        <p>This map was generated from the working tree on 2026-10-26. No source commit is recorded yet; after the repository is initialized, update the header with the commit that contains this file. The code can drift from the map after later edits.</p>
+      </div>
+    </div>
+    <details>
+      <summary>What this map does not claim</summary>
+      <p>It is a code and behavior map, not a security audit or a guarantee of anonymity. Detection is best-effort; the model is English-centric; exact-string replacement does not resolve nicknames or pronouns; the leak check only knows implemented patterns and the approved cast. The app never persists the document, and the user remains responsible for reviewing the safe copy before sharing it.</p>
+    </details>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>StandIn proof-of-concept app map. Static HTML, no scripts, no network requests.</p>
+    <p>Source and run instructions: <span class="path">README.md</span>. Planning record: <span class="path">devpost/</span>.</p>
+  </div>
+</footer>
+</body>
+</html>

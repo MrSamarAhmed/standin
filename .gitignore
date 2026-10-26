@@ -1,0 +1,37 @@
+# Local tooling provisioned for this session
+.tools/
+
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+*.local
+.cache/
+
+# ONNX runtime binaries copied from node_modules by postinstall
+public/ort/
+
+# Secrets and local credentials
+.env
+.env.*
+!.env.example
+
+# Private learner context (never publish)
+devpost/learner-profile.md
+
+# Curriculum / agent tooling installed by the Skill Pack
+.agents/
+.claude/
+skills-lock.json
+agent/
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Test output
+test-results/
+playwright-report/

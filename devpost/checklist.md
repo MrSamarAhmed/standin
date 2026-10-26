@@ -7,10 +7,9 @@ status: approved
      Build mode: fast, because the learner delegated execution and asked for a working,
      judge-ready result. Verification and browser checks are still mandatory per slice.
      Slice checkboxes record implementation and mechanical verification. The Commit
-     messages are the intended checkpoint messages. A local git repository was initialized
-     under the learner's final-readiness instruction and holds commit eac1b2f; there is no
-     remote and nothing has been pushed or published. Learner checkpoints, final review,
-     and the learning activity remain unchecked. -->
+     messages are the intended checkpoint messages. The repository is public at
+     https://github.com/MrSamarAhmed/standin under the learner's push authorization;
+     learner checkpoints, final review, and the learning activity remain unchecked. -->
 
 # Build Checklist
 
@@ -89,7 +88,7 @@ Environment: macOS arm64; Node 24.22.1 and npm 11.19.1 from the local `.tools` i
 - **Fallback and recovery:** in an isolated copy with `model_quantized.onnx` removed, the review screen showed the **Patterns-only** banner and **11** pattern-only cast rows. After restoring the file, **Retry detector** recovered to **19** rows with no banner or page errors.
 - **Responsive and accessible:** 1440×1000 and 390×844 had no horizontal overflow or page errors; 8 keyboard Tab stops showed visible focus outlines; `prefers-reduced-motion: reduce` set animations and transitions to 0.01 ms; `localStorage`, `sessionStorage`, and IndexedDB were empty after a real scan; a `beforeunload` event was prevented while work existed.
 - **Browser coverage gap:** the integration suite covers wrong file type, over-limit, no-detection acknowledgement, stale safe copy, cancel, and fallback. A separate manual click-through of every one of those cases in a browser was not performed; the populated journey, model fallback, and responsive/accessibility checks were exercised in Chrome.
-- **Repo audit:** no `.env` files, credentials, or API keys found. `.gitignore` excludes `.env*`, `devpost/learner-profile.md`, `node_modules/`, `dist/`, `public/ort/`, and agent tooling. A local repository now exists on `main` with commit `eac1b2f`; the working tree is clean, no remote is configured, and nothing has been pushed or published. The commit author is the system-derived local identity `AL-FATIH <al-fatih@AL-FATIHs-MacBook-Pro.local>`. Public-repository creation and push still require explicit learner authorization.
+- **Repo audit:** no `.env` files, credentials, or API keys found. `.gitignore` excludes `.env*`, `devpost/learner-profile.md`, `node_modules/`, `dist/`, `public/ort/`, and agent tooling. The repository is public at https://github.com/MrSamarAhmed/standin on `main`; the working tree is clean, the initial push was not forced, and GitHub reports the MIT license. The private learner profile returns HTTP 404 from the public repository. The commit author is the system-derived local identity `AL-FATIH <al-fatih@AL-FATIHs-MacBook-Pro.local>`. GitHub warns that the 62.73 MB model exceeds its 50 MB recommendation but remains below the 100 MB hard limit; no Git LFS is used.
 
 ## Hands-on Checkpoints
 
@@ -126,5 +125,6 @@ Activity mode: static reference map only; no guided or focused activity was comp
 - 2026-10-26 — **Model failure was tested, not assumed.** An isolated build with the model file removed showed the Patterns-only banner and 11 pattern-only rows; restoring the file and clicking Retry recovered 19 rows. No source change was needed.
 - 2026-10-26 — **App map commit hash recorded.** The map was generated before the first commit; its header and snapshot note now cite `eac1b2f` as the source-code commit. This docs update is committed separately.
 - 2026-10-26 — **Final packaging added.** README, MIT license, model attribution, refreshed screenshots, and a clean-copy `npm ci` verification were completed after the last UI copy edits.
-- 2026-10-26 — **Local repository prepared, not published.** Initialized `main` locally and committed 76 reviewed files as `eac1b2f` (“Build StandIn proof-of-concept privacy desk”) under the learner's final-readiness instruction. No remote exists, nothing was pushed, and no public repository was created. The published-repository identity and any history decision remain the learner's.
+- 2026-10-26 — **Local repository prepared.** Initialized `main` locally and committed 76 reviewed files as `eac1b2f` (“Build StandIn proof-of-concept privacy desk”) under the learner's final-readiness instruction. At that point no remote existed, nothing had been pushed, and no public repository had been created.
+- 2026-10-26 — **Repository published.** The learner authorized the push. Created the public repository https://github.com/MrSamarAhmed/standin and pushed `main` without force; GitHub reports the MIT license and does not serve the private learner profile. History was not rewritten, so the commit author remains the machine-local identity. No demo video or Devpost submission exists.
 

@@ -7,9 +7,10 @@ status: approved
      Build mode: fast, because the learner delegated execution and asked for a working,
      judge-ready result. Verification and browser checks are still mandatory per slice.
      Slice checkboxes record implementation and mechanical verification. The Commit
-     messages are the intended checkpoints, but no commits exist yet: this workspace is
-     not a git repository, and initializing one requires the learner's agreement.
-     Learner checkpoints, final review, and the learning activity remain unchecked. -->
+     messages are the intended checkpoint messages. A local git repository was initialized
+     under the learner's final-readiness instruction and holds commit eac1b2f; there is no
+     remote and nothing has been pushed or published. Learner checkpoints, final review,
+     and the learning activity remain unchecked. -->
 
 # Build Checklist
 
@@ -88,7 +89,7 @@ Environment: macOS arm64; Node 24.22.1 and npm 11.19.1 from the local `.tools` i
 - **Fallback and recovery:** in an isolated copy with `model_quantized.onnx` removed, the review screen showed the **Patterns-only** banner and **11** pattern-only cast rows. After restoring the file, **Retry detector** recovered to **19** rows with no banner or page errors.
 - **Responsive and accessible:** 1440×1000 and 390×844 had no horizontal overflow or page errors; 8 keyboard Tab stops showed visible focus outlines; `prefers-reduced-motion: reduce` set animations and transitions to 0.01 ms; `localStorage`, `sessionStorage`, and IndexedDB were empty after a real scan; a `beforeunload` event was prevented while work existed.
 - **Browser coverage gap:** the integration suite covers wrong file type, over-limit, no-detection acknowledgement, stale safe copy, cancel, and fallback. A separate manual click-through of every one of those cases in a browser was not performed; the populated journey, model fallback, and responsive/accessibility checks were exercised in Chrome.
-- **Repo audit:** no `.env` files, credentials, or API keys found. `.gitignore` excludes `.env*`, `devpost/learner-profile.md`, `node_modules/`, `dist/`, `public/ort/`, and agent tooling. No git repository or commit exists yet, so history and publication checks remain pending learner authorization.
+- **Repo audit:** no `.env` files, credentials, or API keys found. `.gitignore` excludes `.env*`, `devpost/learner-profile.md`, `node_modules/`, `dist/`, `public/ort/`, and agent tooling. A local repository now exists on `main` with commit `eac1b2f`; the working tree is clean, no remote is configured, and nothing has been pushed or published. The commit author is the system-derived local identity `AL-FATIH <al-fatih@AL-FATIHs-MacBook-Pro.local>`. Public-repository creation and push still require explicit learner authorization.
 
 ## Hands-on Checkpoints
 
@@ -119,10 +120,11 @@ Activity mode: static reference map only; no guided or focused activity was comp
 
 ## Revisions
 
-- 2026-10-26 — **No repository commits were created.** The workspace was not a git repository when the build started; the Skill Pack requires learner agreement for `git init`, and publishing requires explicit authorization. Slice checkboxes therefore record implementation and mechanical verification only. The `Commit:` fields remain the intended checkpoint messages.
+- 2026-10-26 — **No repository commits were created during the build slices.** The workspace was not a git repository when the build started; the Skill Pack requires learner agreement for `git init`, and publishing requires explicit authorization. Slice checkboxes therefore record implementation and mechanical verification only. The `Commit:` fields remain the intended checkpoint messages.
 - 2026-10-26 — **Sample safe copy leaked `MRD-441`.** A browser residual check found the reference code still visible. Added a standalone uppercase reference-code rule to `RULES` in `src/lib/patterns.ts` and a regression test, `finds standalone uppercase reference codes`, in `src/lib/patterns.test.ts`. Re-ran the suite and the full journey: 0 known residuals.
 - 2026-10-26 — **28 highlighted mentions but 29 replacements.** `Meridian` repeats exactly outside highlighted spans. Kept the safer all-exact-repeats behavior and clarified the cast instruction and row label (“detected mention”) instead of changing the counts.
 - 2026-10-26 — **Model failure was tested, not assumed.** An isolated build with the model file removed showed the Patterns-only banner and 11 pattern-only rows; restoring the file and clicking Retry recovered 19 rows. No source change was needed.
-- 2026-10-26 — **App map has no commit hash.** It was generated before the first commit. Update the map header after the repository is initialized.
+- 2026-10-26 — **App map commit hash recorded.** The map was generated before the first commit; its header and snapshot note now cite `eac1b2f` as the source-code commit. This docs update is committed separately.
 - 2026-10-26 — **Final packaging added.** README, MIT license, model attribution, refreshed screenshots, and a clean-copy `npm ci` verification were completed after the last UI copy edits.
+- 2026-10-26 — **Local repository prepared, not published.** Initialized `main` locally and committed 76 reviewed files as `eac1b2f` (“Build StandIn proof-of-concept privacy desk”) under the learner's final-readiness instruction. No remote exists, nothing was pushed, and no public repository was created. The published-repository identity and any history decision remain the learner's.
 
